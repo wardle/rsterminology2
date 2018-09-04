@@ -287,22 +287,26 @@ public class Search {
 		IndexWriter writer = createOrLoadIndexWriter(indexFile(), analyser());
 		ExtendedDescription ed = null;
 		long count = 0;
-		while ((ed = Protos.ExtendedDescription.parseDelimitedFrom(is)) != null) {
-			processExtendedDescription(writer, ed);
-			count++;
-			if (count % IMPORT_BATCH_SIZE == 0) {
-				writer.commit();				
-			}
+		try {
+			while ((ed = Protos.ExtendedDescription.parseDelimitedFrom(is)) != null) {
+				processExtendedDescription(writer, ed);
+				count++;
+				if (count % IMPORT_BATCH_SIZE == 0) {
+					writer.commit();				
+				}
+			} 
+			writer.commit();
+			System.out.println("Merging segments...");
+			writer.forceMerge(1);
+			writer.close();
+			System.out.println("Finished updating search index");
+			_searcher = createSearcher();		// create a new searcher now the index has changed.
+		} catch (Exception e) {
+			System.err.println("Failed to import after processing " + count + " descriptions.");
+			e.printStackTrace();
 		}
-		writer.commit();
-		System.out.println("Merging segments...");
-		writer.forceMerge(1);
-		writer.close();
-		System.out.println("Finished updating search index");
-		_searcher = createSearcher();		// create a new searcher now the index has changed.
 
 	}
-	
 
 	protected void processExtendedDescription(IndexWriter writer, ExtendedDescription ed) throws CorruptIndexException, IOException {
 		writer.deleteDocuments(LongPoint.newExactQuery(FIELD_DESCRIPTION_ID_INDEX, ed.getDescription().getId()));

@@ -44,7 +44,6 @@ public class SearchResource {
 	 * @param inactive - whether to include inactive terms in search results (defaults to 0)
 	 * @param fuzzy - whether to use a fuzzy search for search (default to false)
 	 * @param fallbackFuzzy - whether to use a fuzzy search if no results found for non-fuzzy search (defaults to true)
-	 * @param project - optional name of project to limit search results to curated list for that project
 	 * @param uriInfo
 	 * @return
 	 */
