@@ -1,3 +1,7 @@
+This repository has now been archived. It has driven a SNOMED autocomplete engine in a live electronic health record system since 2009, but it has been replaced
+by a more sophisticated and more complete terminology server. This is available at [https://github.com/wardle/hermes](https://github.com/wardle/hermes).
+
+-----
 
 # SNOMED CT fast free text search and autocompletion microservice.
 
